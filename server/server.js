@@ -11,6 +11,7 @@ import authRoutes from './routes/auth.js';
 import bookRoutes from './routes/books.js';
 import borrowRoutes from './routes/borrows.js';
 import userRoutes from './routes/users.js';
+import analyticsRoutes from './routes/analytics.js';
 
 // Load environment variables
 dotenv.config();
@@ -38,7 +39,8 @@ if (process.env.NODE_ENV === 'development') {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/books', bookRoutes);
-app.use('/api/borrows', borrowRoutes);
+app.use('/api/borrows', borrowRout
+app.use('/api/analytics', analyticsRoutes);es);
 app.use('/api/users', userRoutes);
 
 // Health check route
