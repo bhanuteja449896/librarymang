@@ -11,6 +11,8 @@
     "test:watch": "cross-env NODE_ENV=test jest --watch",
     "test:unit": "cross-env NODE_ENV=test jest tests/unit --coverage",
     "test:integration": "cross-env NODE_ENV=test jest tests/integration --coverage",
+    "test:ci": "cross-env NODE_ENV=test jest --coverage --ci --maxWorkers=2",
+    "test:all": "npm run test:unit && npm run test:integration",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
   },
