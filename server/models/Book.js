@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { validateISBN } from '../utils/isbnValidator.js';
 
 const bookSchema = new mongoose.Schema(
   {
@@ -17,6 +18,16 @@ const bookSchema = new mongoose.Schema(
       required: [true, 'Please provide an ISBN'],
       unique: true,
       trim: true,
+      validate: {
+        validator: function(value) {
+          const result = validateISBN(value);
+          return result.isValid;
+        },
+        message: props => {
+          const result = validateISBN(props.value);
+          return result.message;
+        }
+      }
     },
     genre: {
       type: String,
