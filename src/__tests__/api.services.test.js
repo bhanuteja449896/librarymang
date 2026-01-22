@@ -36,17 +36,17 @@ describe('API Services', () => {
       expect(api.post).toHaveBeenCalledWith('/auth/login', credentials);
     });
 
-    it('should call getMe endpoint', async () => {
+    it('should call getProfile endpoint', async () => {
       api.get.mockResolvedValue({ data: { user: {} } });
 
-      await authService.getMe();
+      await authService.getProfile();
 
       expect(api.get).toHaveBeenCalledWith('/auth/me');
     });
 
     it('should call updateProfile endpoint', async () => {
       const userData = { name: 'Updated Name' };
-      api.put.mockResolvedValue({ data: { user: userData } });
+      api.put.mockResolvedValue({ data: { user: userData, token: 'token' } });
 
       await authService.updateProfile(userData);
 
@@ -55,19 +55,19 @@ describe('API Services', () => {
   });
 
   describe('bookService', () => {
-    it('should call getBooks endpoint', async () => {
+    it('should call getAllBooks endpoint', async () => {
       api.get.mockResolvedValue({ data: { books: [] } });
 
-      await bookService.getBooks();
+      await bookService.getAllBooks();
 
-      expect(api.get).toHaveBeenCalledWith('/books', { params: {} });
+      expect(api.get).toHaveBeenCalledWith('/books', { params: undefined });
     });
 
-    it('should call getBooks with params', async () => {
+    it('should call getAllBooks with params', async () => {
       const params = { search: 'test', genre: 'Fiction' };
       api.get.mockResolvedValue({ data: { books: [] } });
 
-      await bookService.getBooks(params);
+      await bookService.getAllBooks(params);
 
       expect(api.get).toHaveBeenCalledWith('/books', { params });
     });
@@ -97,6 +97,14 @@ describe('API Services', () => {
 
       expect(api.delete).toHaveBeenCalledWith('/books/123');
     });
+
+    it('should call getBookStats endpoint', async () => {
+      api.get.mockResolvedValue({ data: { stats: {} } });
+
+      await bookService.getBookStats();
+
+      expect(api.get).toHaveBeenCalledWith('/books/stats/overview');
+    });
   });
 
   describe('borrowService', () => {
@@ -121,7 +129,7 @@ describe('API Services', () => {
 
       await borrowService.getMyBorrows();
 
-      expect(api.get).toHaveBeenCalledWith('/borrows/my');
+      expect(api.get).toHaveBeenCalledWith('/borrows/my-borrows', { params: {} });
     });
 
     it('should call getAllBorrows endpoint', async () => {
@@ -129,15 +137,15 @@ describe('API Services', () => {
 
       await borrowService.getAllBorrows();
 
-      expect(api.get).toHaveBeenCalledWith('/borrows');
+      expect(api.get).toHaveBeenCalledWith('/borrows', { params: undefined });
     });
 
     it('should call payFine endpoint', async () => {
-      api.patch.mockResolvedValue({ data: { borrow: {} } });
+      api.put.mockResolvedValue({ data: { borrow: {} } });
 
       await borrowService.payFine('borrow123');
 
-      expect(api.patch).toHaveBeenCalledWith('/borrows/borrow123/pay');
+      expect(api.put).toHaveBeenCalledWith('/borrows/borrow123/pay-fine');
     });
 
     it('should call getBorrowStats endpoint', async () => {
@@ -145,17 +153,17 @@ describe('API Services', () => {
 
       await borrowService.getBorrowStats();
 
-      expect(api.get).toHaveBeenCalledWith('/borrows/stats');
+      expect(api.get).toHaveBeenCalledWith('/borrows/stats/overview');
     });
   });
 
   describe('userService', () => {
-    it('should call getUsers endpoint', async () => {
+    it('should call getAllUsers endpoint', async () => {
       api.get.mockResolvedValue({ data: { users: [] } });
 
-      await userService.getUsers();
+      await userService.getAllUsers();
 
-      expect(api.get).toHaveBeenCalledWith('/users');
+      expect(api.get).toHaveBeenCalledWith('/users', { params: undefined });
     });
 
     it('should call updateUser endpoint', async () => {
@@ -180,7 +188,7 @@ describe('API Services', () => {
 
       await userService.getUserStats();
 
-      expect(api.get).toHaveBeenCalledWith('/users/stats');
+      expect(api.get).toHaveBeenCalledWith('/users/stats/overview');
     });
   });
 });
