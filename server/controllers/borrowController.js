@@ -1,6 +1,7 @@
 import Borrow from '../models/Borrow.js';
 import Book from '../models/Book.js';
 import User from '../models/User.js';
+import emailService from '../services/email.service.js';
 
 /**
  * @desc    Borrow a book
@@ -60,6 +61,14 @@ export const borrowBook = async (req, res) => {
       .populate('book', 'title author isbn')
       .populate('user', 'name email');
 
+    // Send borrow confirmation email
+    try {
+      await emailService.sendBorrowConfirmation(populatedBorrow.user, populatedBorrow);
+    } catch (emailError) {
+      console.error('Failed to send borrow confirmation email:', emailError.message);
+      // Don't fail the request if email fails
+    }
+
     res.status(201).json(populatedBorrow);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -109,6 +118,14 @@ export const returnBook = async (req, res) => {
     const populatedBorrow = await Borrow.findById(borrow._id)
       .populate('book', 'title author isbn')
       .populate('user', 'name email');
+
+    // Send return confirmation email
+    try {
+      await emailService.sendReturnConfirmation(populatedBorrow.user, populatedBorrow);
+    } catch (emailError) {
+      console.error('Failed to send return confirmation email:', emailError.message);
+      // Don't fail the request if email fails
+    }
 
     res.json(populatedBorrow);
   } catch (error) {
