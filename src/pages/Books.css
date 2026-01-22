@@ -1,0 +1,46 @@
+.books-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.books-container h1 {
+  margin-bottom: 2rem;
+  color: #2c3e50;
+}
+
+.search-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.search-input,
+.filter-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.search-input:focus,
+.filter-input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.no-books {
+  text-align: center;
+  color: #666;
+  font-size: 1.2rem;
+  padding: 3rem;
+}
