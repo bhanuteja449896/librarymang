@@ -4,6 +4,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import connectDB from './config/database.js';
 import { notFound, errorHandler } from './middleware/error.js';
+import emailScheduler from './services/email.scheduler.js';
 
 // Import routes
 import authRoutes from './routes/auth.js';
@@ -20,6 +21,8 @@ const app = express();
 // Connect to database
 if (process.env.NODE_ENV !== 'test') {
   connectDB();
+  // Start email scheduler for overdue notifications
+  emailScheduler.start();
 }
 
 // Middleware
