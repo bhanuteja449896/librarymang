@@ -9,6 +9,16 @@ export const getBooks = async (req, res) => {
   try {
     const { search, genre, author, page = 1, limit = 10 } = req.query;
 
+    // Validate pagination parameters
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    
+    if (pageNum < 1 || limitNum < 1 || limitNum > 100) {
+      return res.status(400).json({ 
+        message: 'Invalid pagination parameters. Page must be >= 1 and limit between 1-100' 
+      });
+    }
+
     let query = {};
 
     // Text search
@@ -27,16 +37,24 @@ export const getBooks = async (req, res) => {
     }
 
     const books = await Book.find(query)
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
+      .limit(limitNum)
+      .skip((pageNum - 1) * limitNum)
       .sort({ createdAt: -1 });
 
     const count = await Book.countDocuments(query);
+    const totalPages = Math.ceil(count / limitNum);
 
     res.json({
-      books,
-      totalPages: Math.ceil(count / limit),
-      currentPage: page,
+      success: true,
+      data: books,
+      pagination: {
+        currentPage: pageNum,
+        totalPages,
+        pageSize: limitNum,
+        totalItems: count,
+        hasNextPage: pageNum < totalPages,
+        hasPrevPage: pageNum > 1,
+      },
       total: count,
     });
   } catch (error) {
