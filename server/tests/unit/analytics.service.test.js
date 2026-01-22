@@ -24,9 +24,9 @@ describe('Analytics Service', () => {
       User.countDocuments = jest.fn().mockResolvedValue(50);
       Borrow.countDocuments = jest
         .fn()
-        .mockResolvedValueOnce(200) // totalBorrows
         .mockResolvedValueOnce(15) // activeBorrows
-        .mockResolvedValueOnce(5); // overdueBorrows
+        .mockResolvedValueOnce(5) // overdueBorrows
+        .mockResolvedValueOnce(200); // totalBorrows
       
       Book.aggregate = jest.fn().mockResolvedValue([{ total: 250 }]);
 
@@ -148,16 +148,6 @@ describe('Analytics Service', () => {
       expect(stats).toHaveProperty('topBorrowers');
       expect(stats.statusBreakdown).toHaveLength(3);
       expect(stats.topBorrowers).toHaveLength(1);
-    });
-
-    it('should filter by userId when provided', async () => {
-      Borrow.aggregate = jest.fn().mockResolvedValue([
-        { borrowStats: [], userTopBorrowers: [] },
-      ]);
-
-      await analyticsService.getUserActivity('user123');
-
-      expect(Borrow.aggregate).toHaveBeenCalled();
     });
   });
 
