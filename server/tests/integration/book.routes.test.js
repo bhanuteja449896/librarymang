@@ -8,6 +8,10 @@ import Book from '../../models/Book.js';
 let mongoServer;
 
 beforeAll(async () => {
+  // Set required environment variables for tests
+  process.env.JWT_SECRET = 'test_jwt_secret_key_for_testing';
+  process.env.JWT_EXPIRE = '7d';
+  
   mongoServer = await MongoMemoryServer.create();
   const mongoUri = mongoServer.getUri();
   await mongoose.connect(mongoUri);
